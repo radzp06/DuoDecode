@@ -2,6 +2,14 @@ import streamlit as st
 import requests
 import time
 from config import get_smart_links
+import os
+from dotenv import load_load_env
+
+
+load_dotenv()
+
+
+gemini_key = os.getenv("GEMINI_API_KEY")
 
 # Page configurations
 st.set_page_config(page_title="AICreator Flow", page_icon="⚡", layout="wide")
@@ -18,6 +26,7 @@ gemini_key = st.sidebar.text_input("Enter Google Gemini API Key", type="password
 st.subheader("👗 Scan & Optimize Your Look")
 with st.container(border=True):
     occasion = st.text_input("1. Where are you going / What is the occasion?", 
+<<<<<<< HEAD
                              placeholder="e.g., 3-Day Beach Vacation to Goa, Corporate Presentation...")
     
     clothes = st.text_area("2. What clothes are you carrying right now?", 
@@ -33,6 +42,15 @@ def execute_pipeline(api_url, headers, payload):
     except Exception:
         return None
 
+=======
+                             placeholder="e.g., 3-Day Beach Vacation to Goa, Corporate Presentation, Evening Party...")
+    
+    clothes = st.text_area("2. What clothes are you carrying right now?", 
+                           placeholder="e.g., White linen shirt, black cargo pants, denim jacket, casual blue jeans...")
+    
+    submit_button = st.button("Generate My Outfit Flow", type="primary")
+
+>>>>>>> parent of e857497 (updated)
 # Execution running logic
 if submit_button:
     if not gemini_key:
@@ -40,12 +58,18 @@ if submit_button:
     elif not occasion or not clothes:
         st.warning("Please fill out both fields to plan your look!")
     else:
+<<<<<<< HEAD
         # --- SWITCHED TO THE HIGH-AVAILABILITY LIGHTWEIGHT ENDPOINT CLUSTER ---
         api_url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={gemini_key}"
+=======
+        # Centralized endpoint configuration
+        api_url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={gemini_key}"
+>>>>>>> parent of e857497 (updated)
         headers = {"Content-Type": "application/json"}
         
         # --- STAGE 1: THE MIX & MATCH PAIRS ---
         st.subheader("🗺️ STAGE 1: Your Personalized Outfit Matchings")
+<<<<<<< HEAD
         
         pair_prompt = f"You are an expert travel stylist. A user is packing these clothing items: [{clothes}] for this specific trip/occasion: '{occasion}'. Generate a clean, realistic pair schedule making the best use of these items. Keep it short, conversational and highly practical."
         payload = {"contents": [{"parts": [{"text": pair_prompt}]}]}
@@ -55,10 +79,19 @@ if submit_button:
             
             if response_json and 'candidates' in response_json:
                 pair_result = response_json['candidates'][0]['content']['parts'][0]['text']
+=======
+        with st.spinner("Gemini is analyzing your items and mapping out configurations..."):
+            pair_prompt = f"You are an expert travel stylist. A user is packing these clothing items: [{clothes}] for this specific trip/occasion: '{occasion}'. Generate a clean, realistic pair schedule making the best use of these items. Group them logically (e.g., Day 1 Look, Day 2 Look). Keep it conversational and highly practical."
+            
+            try:
+                response = requests.post(api_url, headers=headers, json={"contents": [{"parts": [{"text": pair_prompt}]}]})
+                pair_result = response.json()['candidates'][0]['content']['parts'][0]['text']
+>>>>>>> parent of e857497 (updated)
                 st.info(pair_result)
                 
                 # --- STAGE 2: ACCESSORY UPGRADES ---
                 st.subheader("🕶️ STAGE 2: Recommended Missing Accessories")
+<<<<<<< HEAD
                 with st.spinner("Analyzing outfit accent profiles..."):
                     accessory_prompt = f"Looking at these planned outfit matches:\n'{pair_result}'\n\nIdentify 2 specific accessory items (like a particular type of watch, sunglasses) that are missing but vital to make these looks stand out."
                     acc_payload = {"contents": [{"parts": [{"text": accessory_prompt}]}]}
@@ -82,6 +115,17 @@ if submit_button:
 
                 # --- STAGE 4: INSTANT DELIVERY LINKS ---
                 st.subheader("📦 STAGE 4: Instant Affiliate Delivery Portals")
+=======
+                with st.spinner("Calculating missing accents and syncing delivery portals..."):
+                    accessory_prompt = f"Looking at these planned outfit matches:\n'{pair_result}'\n\nIdentify 2 to 3 specific accessory items (like a particular type of watch, sunglasses, belt, or statement socks) that are missing but absolutely vital to make these looks stand out. Explain clearly why each accessory elevates the vibe."
+                    
+                    response_acc = requests.post(api_url, headers=headers, json={"contents": [{"parts": [{"text": accessory_prompt}]}]})
+                    accessory_result = response_acc.json()['candidates'][0]['content']['parts'][0]['text']
+                    st.success(accessory_result)
+                
+                # --- STAGE 3: INSTANT DELIVERY LINKS ---
+                st.subheader("📦 STAGE 3: Instant Affiliate Delivery Portals")
+>>>>>>> parent of e857497 (updated)
                 links = get_smart_links(occasion)
                 
                 col1, col2 = st.columns(2)
@@ -89,6 +133,7 @@ if submit_button:
                     st.link_button("🛒 Order Accessories on Amazon", links["amazon"], use_container_width=True)
                 with col2:
                     st.link_button("⚡ Instant Delivery via Zepto", links["zepto"], use_container_width=True)
+<<<<<<< HEAD
             else:
                 # --- HACKATHON LIVE HARD-CODED FALLBACK SYSTEM IN CASE OF TOTAL GOOGLE SERVER CRASH ---
                 st.warning("⚠️ High traffic detected. Activating offline fail-safe presentation layers for demo validation.")
@@ -114,3 +159,8 @@ if submit_button:
                     st.link_button("🛒 Order Accessories on Amazon", links["amazon"], use_container_width=True)
                 with col2:
                     st.link_button("⚡ Instant Delivery via Zepto", links["zepto"], use_container_width=True)
+=======
+                    
+            except Exception as e:
+                st.error("An error occurred during pipeline scheduling. Verify your API credentials.")
+>>>>>>> parent of e857497 (updated)
