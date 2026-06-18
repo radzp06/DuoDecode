@@ -16,6 +16,13 @@ AFFILIATE_ROUTING_ENGINE = {
             "amazon": "https://www.amazon.in/s?k=leather+belt+and+wallet+combo",
             "zepto": "https://www.zeptonow.com/search?q=perfume"
         },
+        "party": {
+            "keywords": ["party", "fest", "club", "gala", "concert", "evening"],
+            "amazon": "https://www.amazon.in/s?k=unisex+silver+aesthetic+chain",
+            "zepto": "https://www.zeptonow.com/search?q=hair+wax"
+        }
+    }
+}
 
 def get_smart_links(user_occasion_input):
     """Analyzes user text input and returns targeted rapid-delivery links"""
